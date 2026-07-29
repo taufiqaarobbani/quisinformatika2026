@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis Informatika Dasar</title>
+    <title>Kuis Informatika Dasar - Paket Acak</title>
     <style>
         * {
             margin: 0;
@@ -106,6 +106,12 @@
             font-size: 13px;
             color: #004d40;
             margin-bottom: 5px;
+        }
+        .paket-soal {
+            background: #ffecb3;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #e65100;
         }
 
         .soal {
@@ -224,6 +230,7 @@
             <h1>PERMAINAN KUIS INFORMATIKA</h1>
             <div class="info">
                 <div class="identitas">Nama: <span id="tampilNama"></span> | Kelas: <span id="tampilKelas"></span></div>
+                <div class="paket-soal">Paket Soal: <span id="namaPaket"></span></div>
                 <div>Poin: <span id="nilai">0</span></div>
                 <div>Soal <span id="noSoal">1</span> / 10</div>
             </div>
@@ -242,6 +249,7 @@
             <h2>🎉 KUIS SELESAI!</h2>
             <p>Nama: <span id="hasilNama"></span></p>
             <p>Kelas: <span id="hasilKelas"></span></p>
+            <p>Paket Soal: <span id="hasilPaket"></span></p>
             <div class="skor">Skor Kamu: <span id="skorAkhir"></span> / 10</div>
             <p id="pesanNilai"></p>
             <button class="btn-ulang" onclick="location.reload()">KERJAKAN ULANG</button>
@@ -249,25 +257,77 @@
     </div>
 
     <script>
-        // === DAFTAR 10 SOAL INFORMATIKA ===
-        const daftarSoal = [
-            { soal: "1. Manakah penulisan perintah include yang benar?", pilihan: ["A. <#include><nama_file>", "B. #include <nama_file>", "C. include <nama_file>", "D. #include nama_file", "E. Semua benar"], benar: 1 },
-            { soal: "2. Apa fungsi utama variabel dalam pemrograman?", pilihan: ["A. Mempercantik tulisan", "B. Menyimpan data atau nilai", "C. Menghapus file", "D. Mempercepat komputer", "E. Membuat program rumit"], benar: 1 },
-            { soal: "3. Simbol penutup perintah pada bahasa C adalah...", pilihan: ["A. . (titik)", "B. , (koma)", "C. ; (titik koma)", "D. : (titik dua)", "E. ! (tanda seru)"], benar: 2 },
-            { soal: "4. Tag untuk membuat paragraf pada HTML adalah...", pilihan: ["A. <head>", "B. <p>", "C. <body>", "D. <h1>", "E. <div>"], benar: 1 },
-            { soal: "5. Kepanjangan CSS adalah...", pilihan: ["A. Computer Style Sheet", "B. Cascading Style Sheet", "C. Create Simple Style", "D. Color Style Sheet", "E. Central Style System"], benar: 1 },
-            { soal: "6. Tipe data untuk menyimpan kalimat/kata adalah...", pilihan: ["A. Integer", "B. Float", "C. String", "D. Angka", "E. Bulat"], benar: 2 },
-            { soal: "7. Nilai BENAR atau SALAH disebut logika...", pilihan: ["A. Matematika", "B. Algoritma", "C. Boolean", "D. Pemrograman", "E. Data"], benar: 2 },
-            { soal: "8. Struktur untuk memilih kondisi adalah...", pilihan: ["A. for", "B. while", "C. if ... else", "D. ulang", "E. lanjut"], benar: 2 },
-            { soal: "9. Fungsi tag <title> pada HTML adalah...", pilihan: ["A. Membuat judul besar", "B. Judul pada tab browser", "C. Garis bawah tulisan", "D. Mengubah warna", "E. Menyembunyikan teks"], benar: 1 },
-            { soal: "10. Langkah sistematis menyelesaikan masalah adalah...", pilihan: ["A. Program", "B. Kode", "C. Algoritma", "D. Sintaks", "E. Variabel"], benar: 2 }
-        ];
+        // === 5 PAKET SOAL: A, B, C, D, E ===
+        const paketSoal = {
+            A: [
+                { soal: "1. Manakah penulisan perintah include yang benar?", pilihan: ["A. <#include><nama_file>", "B. #include <nama_file>", "C. include <nama_file>", "D. #include nama_file", "E. Semua benar"], benar: 1 },
+                { soal: "2. Apa fungsi utama variabel?", pilihan: ["A. Mempercantik tulisan", "B. Menyimpan data", "C. Menghapus file", "D. Mempercepat komputer", "E. Membuat rumit"], benar: 1 },
+                { soal: "3. Penutup perintah bahasa C adalah...", pilihan: ["A. .", "B. ,", "C. ;", "D. :", "E. !"], benar: 2 },
+                { soal: "4. Tag paragraf HTML adalah...", pilihan: ["A. <head>", "B. <p>", "C. <body>", "D. <h1>", "E. <div>"], benar: 1 },
+                { soal: "5. Kepanjangan CSS adalah...", pilihan: ["A. Computer Style Sheet", "B. Cascading Style Sheet", "C. Create Simple Style", "D. Color Style", "E. Central Sheet"], benar: 1 },
+                { soal: "6. Tipe data kalimat/kata adalah...", pilihan: ["A. Integer", "B. Float", "C. String", "D. Angka", "E. Bulat"], benar: 2 },
+                { soal: "7. Logika benar/salah disebut...", pilihan: ["A. Matematika", "B. Algoritma", "C. Boolean", "D. Program", "E. Data"], benar: 2 },
+                { soal: "8. Struktur percabangan adalah...", pilihan: ["A. for", "B. while", "C. if ... else", "D. ulang", "E. lanjut"], benar: 2 },
+                { soal: "9. Fungsi tag <title> adalah...", pilihan: ["A. Judul besar", "B. Judul tab browser", "C. Garis bawah", "D. Warna", "E. Tersembunyi"], benar: 1 },
+                { soal: "10. Langkah sistematis penyelesaian masalah...", pilihan: ["A. Program", "B. Kode", "C. Algoritma", "D. Sintaks", "E. Variabel"], benar: 2 }
+            ],
+            B: [
+                { soal: "1. Bahasa pemrograman yang digunakan untuk membuat struktur halaman web adalah...", pilihan: ["A. CSS", "B. HTML", "C. Python", "D. Java", "E. C++"], benar: 1 },
+                { soal: "2. Alat untuk mengubah kode program menjadi bahasa mesin adalah...", pilihan: ["A. Editor", "B. Kompiler", "C. Browser", "D. Sistem Operasi", "E. Penyimpanan"], benar: 1 },
+                { soal: "3. Simbol yang digunakan untuk komentar satu baris di C++ adalah...", pilihan: ["A. //", "B. /*", "C. *", "D. #", "E. --"], benar: 0 },
+                { soal: "4. Tag untuk membuat baris baru pada HTML adalah...", pilihan: ["A. <hr>", "B. <br>", "C. <tr>", "D. <td>", "E. <b>"], benar: 1 },
+                { soal: "5. Properti CSS untuk mengubah warna latar belakang adalah...", pilihan: ["A. color", "B. background-color", "C. font-color", "D. bg-color", "E. shade"], benar: 1 },
+                { soal: "6. Nilai bilangan bulat disebut tipe data...", pilihan: ["A. Float", "B. Char", "C. Integer", "D. String", "E. Boolean"], benar: 2 },
+                { soal: "7. Perulangan yang pasti berjalan minimal satu kali adalah...", pilihan: ["A. for", "B. while", "C. do ... while", "D. if", "E. switch"], benar: 2 },
+                { soal: "8. Singkatan dari HTTP adalah...", pilihan: ["A. Hyper Text Transfer Protocol", "B. High Tech Transfer Program", "C. Hyper Text Tag Protocol", "D. Home Tool Transfer Page", "E. Hyperlink Text Tech Page"], benar: 0 },
+                { soal: "9. Fungsi utama komputer adalah memproses...", pilihan: ["A. Gambar", "B. Data/Informasi", "C. Suara", "D. Angka", "E. Teks"], benar: 1 },
+                { soal: "10. Urutan pengerjaan instruksi dalam algoritma disebut...", pilihan: ["A. Percabangan", "B. Perulangan", "C. Runtunan", "D. Pemilihan", "E. Pengulangan"], benar: 2 }
+            ],
+            C: [
+                { soal: "1. Bagian program yang berisi pendefinisian fungsi utama adalah...", pilihan: ["A. main()", "B. awal()", "C. mulai()", "D. fungsi()", "E. inti()"], benar: 0 },
+                { soal: "2. Tag untuk membuat teks tebal pada HTML adalah...", pilihan: ["A. <i>", "B. <b>", "C. <u>", "D. <s>", "E. <p>"], benar: 1 },
+                { soal: "3. Simbol yang digunakan untuk mengalikan angka adalah...", pilihan: ["A. x", "B. *", "C. /", "D. +", "E. %"], benar: 1 },
+                { soal: "4. Kepanjangan dari URL adalah...", pilihan: ["A. Uniform Resource Locator", "B. Universal Resource Link", "C. Uniform Reference Locator", "D. Unified Resource Link", "E. Universal Reference Locator"], benar: 0 },
+                { soal: "5. Properti CSS untuk mengatur jarak luar elemen adalah...", pilihan: ["A. padding", "B. margin", "C. border", "D. outline", "E. spacing"], benar: 1 },
+                { soal: "6. Hasil dari operasi 10 % 3 adalah...", pilihan: ["A. 3", "B. 1", "C. 0", "D. 3,3", "E. 10"], benar: 1 },
+                { soal: "7. Memilih satu dari banyak kondisi menggunakan...", pilihan: ["A. if", "B. switch", "C. for", "D. while", "E. do"], benar: 1 },
+                { soal: "8. Perangkat keras yang berfungsi menyimpan data secara permanen adalah...", pilihan: ["A. RAM", "B. Harddisk", "C. Processor", "D. VGA", "E. Power Supply"], benar: 1 },
+                { soal: "9. Dalam logika, nilai 1 berarti...", pilihan: ["A. Salah", "B. Benar", "C. Nol", "D. Kosong", "E. Min"], benar: 1 },
+                { soal: "10. Kumpulan instruksi yang memerintah komputer disebut...", pilihan: ["A. Perangkat Keras", "B. Program", "C. Algoritma", "D. Data", "E. Sistem"], benar: 1 }
+            ],
+            D: [
+                { soal: "1. Tag yang berisi informasi tentang halaman web adalah...", pilihan: ["A. <body>", "B. <head>", "C. <html>", "D. <title>", "E. <meta>"], benar: 1 },
+                { soal: "2. Tipe data bilangan pecahan adalah...", pilihan: ["A. int", "B. float", "C. char", "D. string", "E. bool"], benar: 1 },
+                { soal: "3. Operator untuk membandingkan kesamaan nilai adalah...", pilihan: ["A. =", "B. ==", "C. ===", "D. :", "E. ::="], benar: 1 },
+                { soal: "4. Fungsi untuk menampilkan output di layar bahasa C++ adalah...", pilihan: ["A. cin", "B. cout", "C. print", "D. echo", "E. tulis"], benar: 1 },
+                { soal: "5. Kepanjangan dari WWW adalah...", pilihan: ["A. World Wide Web", "B. Web World Wide", "C. Wide World Web", "D. World Web Wide", "E. Wide Web World"], benar: 0 },
+                { soal: "6. Perintah untuk mengulang kode dengan batas pasti adalah...", pilihan: ["A. while", "B. for", "C. if", "D. goto", "E. switch"], benar: 1 },
+                { soal: "7. Bagian komputer yang mengolah data adalah...", pilihan: ["A. RAM", "B. CPU", "C. Harddisk", "D. Monitor", "E. Keyboard"], benar: 1 },
+                { soal: "8. Tag untuk membuat daftar bernomor urut adalah...", pilihan: ["A. <ul>", "B. <ol>", "C. <li>", "D. <dl>", "E. <dt>"], benar: 1 },
+                { soal: "9. Properti CSS untuk mengatur ukuran tulisan adalah...", pilihan: ["A. font-style", "B. font-size", "C. font-weight", "D. text-size", "E. size-font"], benar: 1 },
+                { soal: "10. Urutan langkah penyelesaian masalah yang logis disebut...", pilihan: ["A. Kode", "B. Algoritma", "C. Program", "D. Sintaks", "E. Variabel"], benar: 1 }
+            ],
+            E: [
+                { soal: "1. Ekstensi file lembar gaya CSS adalah...", pilihan: ["A. .html", "B. .css", "C. .js", "D. .txt", "E. .exe"], benar: 1 },
+                { soal: "2. Penulisan variabel yang benar di bawah ini adalah...", pilihan: ["A. var nama_saya", "B. var nama saya", "C. var nama-saya", "D. var 1nama", "E. var nama&saya"], benar: 0 },
+                { soal: "3. Bagian yang terlihat oleh pengguna pada halaman web ada di dalam tag...", pilihan: ["A. <head>", "B. <body>", "C. <html>", "D. <title>", "E. <link>"], benar: 1 },
+                { soal: "4. Kepanjangan dari LAN adalah...", pilihan: ["A. Local Area Network", "B. Large Area Network", "C. Local Access Net", "D. Link Area Network", "E. Local Area Net"], benar: 0 },
+                { soal: "5. Operator logika DAN ditulis dengan...", pilihan: ["A. ||", "B. &&", "C. !", "D. &", "E. |"], benar: 1 },
+                { soal: "6. Tag untuk menyisipkan gambar pada HTML adalah...", pilihan: ["A. <pic>", "B. <img>", "C. <photo>", "D. <gambar>", "E. <src>"], benar: 1 },
+                { soal: "7. Apa yang dimaksud dengan perangkat lunak?", pilihan: ["A. Bagian fisik komputer", "B. Program/data yang tidak berwujud", "C. Kabel dan alat", "D. Monitor dan keyboard", "E. Semua benar"], benar: 1 },
+                { soal: "8. Sintaks yang digunakan untuk mengubah gaya tulisan miring adalah...", pilihan: ["A. <b>", "B. <i>", "C. <u>", "D. <s>", "E. <p>"], benar: 1 },
+                { soal: "9. Nilai yang tidak berubah selama program berjalan disebut...", pilihan: ["A. Variabel", "B. Konstanta", "C. Tipe Data", "D. Fungsi", "E. Objek"], benar: 1 },
+                { soal: "10. Alat yang digunakan untuk mengetik data ke komputer adalah...", pilihan: ["A. Mouse", "B. Keyboard", "C. Monitor", "D. Printer", "E. Speaker"], benar: 1 }
+            ]
+        };
 
         // === VARIABEL ===
         let nomor = 0;
         let poin = 0;
         let namaSiswa = "";
         let kelasSiswa = "";
+        let daftarSoalTerpilih = [];
+        let namaPaketTerpilih = "";
 
         // === ELEMEN HALAMAN ===
         const halamanLogin = document.getElementById("halamanLogin");
@@ -280,6 +340,7 @@
 
         const tampilNama = document.getElementById("tampilNama");
         const tampilKelas = document.getElementById("tampilKelas");
+        const tampilPaket = document.getElementById("namaPaket");
         const teksSoal = document.getElementById("teksSoal");
         const kotakPilihan = document.getElementById("kotakPilihan");
         const nilai = document.getElementById("nilai");
@@ -289,8 +350,17 @@
 
         const hasilNama = document.getElementById("hasilNama");
         const hasilKelas = document.getElementById("hasilKelas");
+        const hasilPaket = document.getElementById("hasilPaket");
         const skorAkhir = document.getElementById("skorAkhir");
         const pesanNilai = document.getElementById("pesanNilai");
+
+        // === FUNGSI PILIH PAKET SECARA ACAK ===
+        function pilihPaketAcak() {
+            const daftarKunci = Object.keys(paketSoal); // ['A','B','C','D','E']
+            const indeksAcak = Math.floor(Math.random() * daftarKunci.length);
+            namaPaketTerpilih = daftarKunci[indeksAcak];
+            daftarSoalTerpilih = paketSoal[namaPaketTerpilih];
+        }
 
         // === FUNGSI MULAI KUIS ===
         btnMulai.addEventListener("click", () => {
@@ -302,18 +372,21 @@
                 return;
             }
 
-            // Pindah ke halaman kuis
+            // PILIH PAKET SEKARANG
+            pilihPaketAcak();
+
             pesanError.style.display = "none";
             halamanLogin.style.display = "none";
             halamanKuis.style.display = "block";
             tampilNama.textContent = namaSiswa;
             tampilKelas.textContent = kelasSiswa;
+            tampilPaket.textContent = namaPaketTerpilih;
             tampilSoal();
         });
 
         // === TAMPILKAN SOAL ===
         function tampilSoal() {
-            const soalSekarang = daftarSoal[nomor];
+            const soalSekarang = daftarSoalTerpilih[nomor];
             teksSoal.textContent = soalSekarang.soal;
             kotakPilihan.innerHTML = "";
             pesan.style.display = "none";
@@ -335,7 +408,7 @@
             semuaTombol.forEach(b => b.disabled = true);
             pesan.style.display = "block";
 
-            if (pilihanUser === daftarSoal[nomor].benar) {
+            if (pilihanUser === daftarSoalTerpilih[nomor].benar) {
                 poin++;
                 nilai.textContent = poin;
                 pesan.textContent = "✅ JAWABAN BENAR! Poin bertambah 1";
@@ -347,7 +420,7 @@
                 pesan.style.background = "#ffcdd2";
                 pesan.style.color = "#c62828";
                 tombolPilih.style.background = "#f44336";
-                semuaTombol[daftarSoal[nomor].benar].style.background = "#4caf50";
+                semuaTombol[daftarSoalTerpilih[nomor].benar].style.background = "#4caf50";
             }
 
             tombolLanjut.style.display = "block";
@@ -356,7 +429,7 @@
         // === TOMBOL LANJUT ===
         tombolLanjut.onclick = () => {
             nomor++;
-            if (nomor < daftarSoal.length) {
+            if (nomor < daftarSoalTerpilih.length) {
                 tampilSoal();
             } else {
                 tampilHasil();
@@ -369,6 +442,7 @@
             halamanHasil.style.display = "block";
             hasilNama.textContent = namaSiswa;
             hasilKelas.textContent = kelasSiswa;
+            hasilPaket.textContent = namaPaketTerpilih;
             skorAkhir.textContent = poin;
 
             if (poin >= 8) pesanNilai.textContent = "🌟 Luar biasa! Penguasaan materi sangat baik.";
