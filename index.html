@@ -37,15 +37,75 @@
             font-size: 22px;
         }
 
+        /* === HALAMAN LOGIN === */
+        .halaman-login {
+            display: block;
+        }
+        .halaman-kuis, .halaman-hasil {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #004d40;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #b2dfdb;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #00796b;
+        }
+        .btn-mulai {
+            width: 100%;
+            padding: 12px;
+            background: #00796b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-mulai:hover {
+            background: #004d40;
+        }
+        .pesan-error {
+            color: #d32f2f;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* === HALAMAN KUIS === */
         .info {
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
             background: #b2dfdb;
             padding: 12px;
             border-radius: 8px;
             font-weight: bold;
             margin-bottom: 20px;
-            font-size: 15px;
+            font-size: 14px;
+        }
+        .identitas {
+            width: 100%;
+            font-size: 13px;
+            color: #004d40;
+            margin-bottom: 5px;
         }
 
         .soal {
@@ -112,180 +172,146 @@
             background: #f57c00;
         }
 
-        #hasilAkhir {
+        /* === HALAMAN HASIL === */
+        .halaman-hasil {
             text-align: center;
-            padding: 30px 20px;
-            display: none;
+            padding: 20px;
         }
-
-        #hasilAkhir h2 {
+        .halaman-hasil h2 {
             color: #2e7d32;
             margin-bottom: 15px;
         }
-
         .skor {
             font-size: 28px;
             font-weight: bold;
             margin: 15px 0;
             color: #00796b;
         }
+        .btn-ulang {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .btn-ulang:hover {
+            background: #1565c0;
+        }
     </style>
 </head>
 <body>
     <div class="wadah">
-        <h1>PERMAINAN KUIS INFORMATIKA</h1>
-
-        <div class="info">
-            <div>Poin: <span id="nilai">0</span></div>
-            <div>Soal <span id="noSoal">1</span> / 10</div>
+        <!-- HALAMAN LOGIN -->
+        <div class="halaman-login" id="halamanLogin">
+            <h1>MASUK KUIS INFORMATIKA</h1>
+            <div class="form-group">
+                <label>Nama Lengkap Siswa</label>
+                <input type="text" id="inputNama" placeholder="Masukkan nama kamu..." autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Kelas</label>
+                <input type="text" id="inputKelas" placeholder="Contoh: X-RPL / XI-TKJ 2..." autocomplete="off">
+            </div>
+            <button class="btn-mulai" id="btnMulai">MULAI KUIS</button>
+            <div class="pesan-error" id="pesanError">Lengkapi Nama dan Kelas terlebih dahulu!</div>
         </div>
 
-        <div class="soal">
-            <p id="teksSoal"></p>
+        <!-- HALAMAN KUIS -->
+        <div class="halaman-kuis" id="halamanKuis">
+            <h1>PERMAINAN KUIS INFORMATIKA</h1>
+            <div class="info">
+                <div class="identitas">Nama: <span id="tampilNama"></span> | Kelas: <span id="tampilKelas"></span></div>
+                <div>Poin: <span id="nilai">0</span></div>
+                <div>Soal <span id="noSoal">1</span> / 10</div>
+            </div>
+
+            <div class="soal">
+                <p id="teksSoal"></p>
+            </div>
+
+            <div class="pilihan" id="kotakPilihan"></div>
+            <div id="pesan"></div>
+            <button id="tombolLanjut">Soal Berikutnya</button>
         </div>
 
-        <div class="pilihan" id="kotakPilihan"></div>
-        <div id="pesan"></div>
-        <button id="tombolLanjut">Soal Berikutnya</button>
-
-        <div id="hasilAkhir">
+        <!-- HALAMAN HASIL -->
+        <div class="halaman-hasil" id="halamanHasil">
             <h2>🎉 KUIS SELESAI!</h2>
-            <p>Terima kasih sudah mengerjakan soal</p>
+            <p>Nama: <span id="hasilNama"></span></p>
+            <p>Kelas: <span id="hasilKelas"></span></p>
             <div class="skor">Skor Kamu: <span id="skorAkhir"></span> / 10</div>
             <p id="pesanNilai"></p>
+            <button class="btn-ulang" onclick="location.reload()">KERJAKAN ULANG</button>
         </div>
     </div>
 
     <script>
-        // DAFTAR 10 SOAL INFORMATIKA
+        // === DAFTAR 10 SOAL INFORMATIKA ===
         const daftarSoal = [
-            {
-                soal: "1. Manakah penulisan perintah include yang benar?",
-                pilihan: [
-                    "A. <#include><nama_file>",
-                    "B. #include <nama_file>",
-                    "C. include <nama_file>",
-                    "D. #include nama_file",
-                    "E. Semua benar"
-                ],
-                benar: 1
-            },
-            {
-                soal: "2. Apa fungsi utama variabel dalam pemrograman?",
-                pilihan: [
-                    "A. Mempercantik tulisan",
-                    "B. Menyimpan data atau nilai",
-                    "C. Menghapus file",
-                    "D. Mempercepat komputer",
-                    "E. Membuat program rumit"
-                ],
-                benar: 1
-            },
-            {
-                soal: "3. Simbol penutup perintah pada bahasa C adalah...",
-                pilihan: [
-                    "A. . (titik)",
-                    "B. , (koma)",
-                    "C. ; (titik koma)",
-                    "D. : (titik dua)",
-                    "E. ! (tanda seru)"
-                ],
-                benar: 2
-            },
-            {
-                soal: "4. Tag untuk membuat paragraf pada HTML adalah...",
-                pilihan: [
-                    "A. <head>",
-                    "B. <p>",
-                    "C. <body>",
-                    "D. <h1>",
-                    "E. <div>"
-                ],
-                benar: 1
-            },
-            {
-                soal: "5. Kepanjangan CSS adalah...",
-                pilihan: [
-                    "A. Computer Style Sheet",
-                    "B. Cascading Style Sheet",
-                    "C. Create Simple Style",
-                    "D. Color Style Sheet",
-                    "E. Central Style System"
-                ],
-                benar: 1
-            },
-            {
-                soal: "6. Tipe data untuk menyimpan kalimat/kata adalah...",
-                pilihan: [
-                    "A. Integer",
-                    "B. Float",
-                    "C. String",
-                    "D. Angka",
-                    "E. Bulat"
-                ],
-                benar: 2
-            },
-            {
-                soal: "7. Nilai BENAR atau SALAH disebut logika...",
-                pilihan: [
-                    "A. Matematika",
-                    "B. Algoritma",
-                    "C. Boolean",
-                    "D. Pemrograman",
-                    "E. Data"
-                ],
-                benar: 2
-            },
-            {
-                soal: "8. Struktur untuk memilih kondisi adalah...",
-                pilihan: [
-                    "A. for",
-                    "B. while",
-                    "C. if ... else",
-                    "D. ulang",
-                    "E. lanjut"
-                ],
-                benar: 2
-            },
-            {
-                soal: "9. Fungsi tag <title> pada HTML adalah...",
-                pilihan: [
-                    "A. Membuat judul besar",
-                    "B. Judul pada tab browser",
-                    "C. Garis bawah tulisan",
-                    "D. Mengubah warna",
-                    "E. Menyembunyikan teks"
-                ],
-                benar: 1
-            },
-            {
-                soal: "10. Langkah sistematis menyelesaikan masalah adalah...",
-                pilihan: [
-                    "A. Program",
-                    "B. Kode",
-                    "C. Algoritma",
-                    "D. Sintaks",
-                    "E. Variabel"
-                ],
-                benar: 2
-            }
+            { soal: "1. Manakah penulisan perintah include yang benar?", pilihan: ["A. <#include><nama_file>", "B. #include <nama_file>", "C. include <nama_file>", "D. #include nama_file", "E. Semua benar"], benar: 1 },
+            { soal: "2. Apa fungsi utama variabel dalam pemrograman?", pilihan: ["A. Mempercantik tulisan", "B. Menyimpan data atau nilai", "C. Menghapus file", "D. Mempercepat komputer", "E. Membuat program rumit"], benar: 1 },
+            { soal: "3. Simbol penutup perintah pada bahasa C adalah...", pilihan: ["A. . (titik)", "B. , (koma)", "C. ; (titik koma)", "D. : (titik dua)", "E. ! (tanda seru)"], benar: 2 },
+            { soal: "4. Tag untuk membuat paragraf pada HTML adalah...", pilihan: ["A. <head>", "B. <p>", "C. <body>", "D. <h1>", "E. <div>"], benar: 1 },
+            { soal: "5. Kepanjangan CSS adalah...", pilihan: ["A. Computer Style Sheet", "B. Cascading Style Sheet", "C. Create Simple Style", "D. Color Style Sheet", "E. Central Style System"], benar: 1 },
+            { soal: "6. Tipe data untuk menyimpan kalimat/kata adalah...", pilihan: ["A. Integer", "B. Float", "C. String", "D. Angka", "E. Bulat"], benar: 2 },
+            { soal: "7. Nilai BENAR atau SALAH disebut logika...", pilihan: ["A. Matematika", "B. Algoritma", "C. Boolean", "D. Pemrograman", "E. Data"], benar: 2 },
+            { soal: "8. Struktur untuk memilih kondisi adalah...", pilihan: ["A. for", "B. while", "C. if ... else", "D. ulang", "E. lanjut"], benar: 2 },
+            { soal: "9. Fungsi tag <title> pada HTML adalah...", pilihan: ["A. Membuat judul besar", "B. Judul pada tab browser", "C. Garis bawah tulisan", "D. Mengubah warna", "E. Menyembunyikan teks"], benar: 1 },
+            { soal: "10. Langkah sistematis menyelesaikan masalah adalah...", pilihan: ["A. Program", "B. Kode", "C. Algoritma", "D. Sintaks", "E. Variabel"], benar: 2 }
         ];
 
+        // === VARIABEL ===
         let nomor = 0;
         let poin = 0;
+        let namaSiswa = "";
+        let kelasSiswa = "";
 
-        // Ambil elemen
+        // === ELEMEN HALAMAN ===
+        const halamanLogin = document.getElementById("halamanLogin");
+        const halamanKuis = document.getElementById("halamanKuis");
+        const halamanHasil = document.getElementById("halamanHasil");
+        const inputNama = document.getElementById("inputNama");
+        const inputKelas = document.getElementById("inputKelas");
+        const btnMulai = document.getElementById("btnMulai");
+        const pesanError = document.getElementById("pesanError");
+
+        const tampilNama = document.getElementById("tampilNama");
+        const tampilKelas = document.getElementById("tampilKelas");
         const teksSoal = document.getElementById("teksSoal");
         const kotakPilihan = document.getElementById("kotakPilihan");
         const nilai = document.getElementById("nilai");
         const noSoal = document.getElementById("noSoal");
         const pesan = document.getElementById("pesan");
         const tombolLanjut = document.getElementById("tombolLanjut");
-        const hasilAkhir = document.getElementById("hasilAkhir");
+
+        const hasilNama = document.getElementById("hasilNama");
+        const hasilKelas = document.getElementById("hasilKelas");
         const skorAkhir = document.getElementById("skorAkhir");
         const pesanNilai = document.getElementById("pesanNilai");
 
-        // Tampilkan soal
+        // === FUNGSI MULAI KUIS ===
+        btnMulai.addEventListener("click", () => {
+            namaSiswa = inputNama.value.trim();
+            kelasSiswa = inputKelas.value.trim();
+
+            if (namaSiswa === "" || kelasSiswa === "") {
+                pesanError.style.display = "block";
+                return;
+            }
+
+            // Pindah ke halaman kuis
+            pesanError.style.display = "none";
+            halamanLogin.style.display = "none";
+            halamanKuis.style.display = "block";
+            tampilNama.textContent = namaSiswa;
+            tampilKelas.textContent = kelasSiswa;
+            tampilSoal();
+        });
+
+        // === TAMPILKAN SOAL ===
         function tampilSoal() {
             const soalSekarang = daftarSoal[nomor];
             teksSoal.textContent = soalSekarang.soal;
@@ -303,7 +329,7 @@
             });
         }
 
-        // Cek jawaban
+        // === CEK JAWABAN ===
         function cekJawaban(pilihanUser, tombolPilih) {
             const semuaTombol = document.querySelectorAll(".tombol");
             semuaTombol.forEach(b => b.disabled = true);
@@ -327,7 +353,7 @@
             tombolLanjut.style.display = "block";
         }
 
-        // Tombol lanjut
+        // === TOMBOL LANJUT ===
         tombolLanjut.onclick = () => {
             nomor++;
             if (nomor < daftarSoal.length) {
@@ -337,23 +363,18 @@
             }
         };
 
-        // Tampil hasil akhir
+        // === TAMPILKAN HASIL AKHIR ===
         function tampilHasil() {
-            document.querySelector(".info").style.display = "none";
-            document.querySelector(".soal").style.display = "none";
-            kotakPilihan.style.display = "none";
-            pesan.style.display = "none";
-            tombolLanjut.style.display = "none";
-            hasilAkhir.style.display = "block";
+            halamanKuis.style.display = "none";
+            halamanHasil.style.display = "block";
+            hasilNama.textContent = namaSiswa;
+            hasilKelas.textContent = kelasSiswa;
             skorAkhir.textContent = poin;
 
             if (poin >= 8) pesanNilai.textContent = "🌟 Luar biasa! Penguasaan materi sangat baik.";
             else if (poin >= 6) pesanNilai.textContent = "👍 Bagus! Tingkatkan lagi pemahamanmu.";
             else pesanNilai.textContent = "💪 Semangat belajar lagi ya, pasti bisa lebih baik!";
         }
-
-        // Mulai permainan
-        tampilSoal();
     </script>
 </body>
 </html>
