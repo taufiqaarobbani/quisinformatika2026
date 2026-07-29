@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #e0f7fa;
+    padding: 20px;
+}
+
+.wadah {
+    max-width: 750px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #006064;
+    margin-bottom: 20px;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    background-color: #b2ebf2;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.soal {
+    background-color: #f1f8e9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 5px solid #558b2f;
+}
+
+.pilihan {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tombol {
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4fc3f7;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tombol:hover:not(:disabled) {
+    background-color: #0288d1;
+    color: white;
+    transform: translateX(5px);
+}
+
+.tombol:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+#pesan {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.tombolLanjut {
+    margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.tombolLanjut:hover {
+    background-color: #f57c00;
+}
+
+#hasilAkhir {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #e8f5e8;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
