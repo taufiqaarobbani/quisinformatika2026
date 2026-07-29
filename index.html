@@ -3,27 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis Informatika - 10 Soal</title>
-    <link rel="stylesheet" href="gaya.css">
+    <title>Kuis Informatika Dasar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #e0f2f1;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wadah {
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #00695c;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-between;
+            background: #b2dfdb;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .soal {
+            background: #f1f8e9;
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 5px solid #558b2f;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .pilihan {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tombol {
+            padding: 12px;
+            font-size: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #4fc3f7;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .tombol:hover:not(:disabled) {
+            background: #0288d1;
+            color: white;
+            transform: translateX(3px);
+        }
+
+        .tombol:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        #pesan {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        #tombolLanjut {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            display: none;
+        }
+
+        #tombolLanjut:hover {
+            background: #f57c00;
+        }
+
+        #hasilAkhir {
+            text-align: center;
+            padding: 30px 20px;
+            display: none;
+        }
+
+        #hasilAkhir h2 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .skor {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #00796b;
+        }
+    </style>
 </head>
 <body>
     <div class="wadah">
         <h1>PERMAINAN KUIS INFORMATIKA</h1>
 
         <div class="info">
-            <div class="poin">Poin: <span id="nilai">0</span></div>
-            <div class="nomor">Soal ke-<span id="noSoal">1</span> dari 10</div>
+            <div>Poin: <span id="nilai">0</span></div>
+            <div>Soal <span id="noSoal">1</span> / 10</div>
         </div>
 
         <div class="soal">
-            <h3 id="teksSoal"></h3>
+            <p id="teksSoal"></p>
         </div>
 
         <div class="pilihan" id="kotakPilihan"></div>
         <div id="pesan"></div>
-        <button id="tombolLanjut" class="tombolLanjut" style="display:none;">Soal Berikutnya</button>
+        <button id="tombolLanjut">Soal Berikutnya</button>
+
+        <div id="hasilAkhir">
+            <h2>🎉 KUIS SELESAI!</h2>
+            <p>Terima kasih sudah mengerjakan soal</p>
+            <div class="skor">Skor Kamu: <span id="skorAkhir"></span> / 10</div>
+            <p id="pesanNilai"></p>
+        </div>
     </div>
 
-    <script src="skrip.js"></script>
+    <script>
+        // DAFTAR 10 SOAL INFORMATIKA
+        const daftarSoal = [
+            {
+                soal: "1. Manakah penulisan perintah include yang benar?",
+                pilihan: [
+                    "A. &lt;#include&gt;&lt;nama_file&gt;",
+                    "B. #include &lt;nama_file&gt;",
+                    "C. include &lt;nama_file&gt;",
+                    "D. #include nama_file",
+                    "E. Semua benar"
+                ],
+                benar: 1
+            },
+            {
+                soal: "2. Apa fungsi utama variabel dalam pemrograman?",
+                pilihan: [
+                    "A. Mempercantik tulisan",
+                    "B. Menyimpan data atau nilai",
+                    "C. Menghapus file",
+                    "D. Mempercepat komputer",
+                    "E. Membuat program rumit"
+                ],
+                benar: 1
+            },
+            {
+                soal: "3. Simbol penutup perintah pada bahasa C adalah...",
+                pilihan: [
+                    "A. . (titik)",
+                    "B. , (koma)",
+                    "C. ; (titik koma)",
+                    "D. : (titik dua)",
+                    "E. ! (tanda seru)"
+                ],
+                benar: 2
+            },
+            {
+                soal: "4. Tag untuk membuat paragraf pada HTML adalah...",
+                pilihan: [
+                    "A. &lt;head&gt;",
+                    "B. &lt;p&gt;",
+                    "C. &lt;body&gt;",
+                    "D. &lt;h1&gt;",
+                    "E. &lt;div&gt;"
+                ],
+                benar: 1
+            },
+            {
+                soal: "5. Kepanjangan CSS adalah...",
+                pilihan: [
+                    "A. Computer Style Sheet",
+                    "B. Cascading Style Sheet",
+                    "C. Create Simple Style",
+                    "D. Color Style Sheet",
+                    "E. Central Style System"
+                ],
+                benar: 1
+            },
+            {
+                soal: "6. Tipe data untuk menyimpan kalimat/kata adalah...",
+                pilihan: [
+                    "A. Integer",
+                    "B. Float",
+                    "C. String",
+                    "D. Angka",
+                    "E. Bulat"
+                ],
+                benar: 2
+            },
+            {
+                soal: "7. Nilai BENAR atau SALAH disebut logika...",
+                pilihan: [
+                    "A. Matematika",
+                    "B. Algoritma",
+                    "C. Boolean",
+                    "D. Pemrograman",
+                    "E. Data"
+                ],
+                benar: 2
+            },
+            {
+                soal: "8. Struktur untuk memilih kondisi adalah...",
+                pilihan: [
+                    "A. for",
+                    "B. while",
+                    "C. if ... else",
+                    "D. ulang",
+                    "E. lanjut"
+                ],
+                benar: 2
+            },
+            {
+                soal: "9. Fungsi tag &lt;title&gt; pada HTML adalah...",
+                pilihan: [
+                    "A. Membuat judul besar",
+                    "B. Judul pada tab browser",
+                    "C. Garis bawah tulisan",
+                    "D. Mengubah warna",
+                    "E. Menyembunyikan teks"
+                ],
+                benar: 1
+            },
+            {
+                soal: "10. Langkah sistematis menyelesaikan masalah adalah...",
+                pilihan: [
+                    "A. Program",
+                    "B. Kode",
+                    "C. Algoritma",
+                    "D. Sintaks",
+                    "E. Variabel"
+                ],
+                benar: 2
+            }
+        ];
+
+        let nomor = 0;
+        let poin = 0;
+
+        // Ambil elemen
+        const teksSoal = document.getElementById("teksSoal");
+        const kotakPilihan = document.getElementById("kotakPilihan");
+        const nilai = document.getElementById("nilai");
+        const noSoal = document.getElementById("noSoal");
+        const pesan = document.getElementById("pesan");
+        const tombolLanjut = document.getElementById("tombolLanjut");
+        const hasilAkhir = document.getElementById("hasilAkhir");
+        const skorAkhir = document.getElementById("skorAkhir");
+        const pesanNilai = document.getElementById("pesanNilai");
+
+        // Tampilkan soal
+        function tampilSoal() {
+            const soalSekarang = daftarSoal[nomor];
+            teksSoal.textContent = soalSekarang.soal;
+            kotakPilihan.innerHTML = "";
+            pesan.style.display = "none";
+            tombolLanjut.style.display = "none";
+            noSoal.textContent = nomor + 1;
+
+            soalSekarang.pilihan.forEach((pilih, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "tombol";
+                btn.textContent = pilih;
+                btn.onclick = () => cekJawaban(idx, btn);
+                kotakPilihan.appendChild(btn);
+            });
+        }
+
+        // Cek jawaban
+        function cekJawaban(pilihanUser, tombolPilih) {
+            const semuaTombol = document.querySelectorAll(".tombol");
+            semuaTombol.forEach(b => b.disabled = true);
+            pesan.style.display = "block";
+
+            if (pilihanUser === daftarSoal[nomor].benar) {
+                poin++;
+                nilai.textContent = poin;
+                pesan.textContent = "✅ JAWABAN BENAR! Poin bertambah 1";
+                pesan.style.background = "#c8e6c9";
+                pesan.style.color = "#2e7d32";
+                tombolPilih.style.background = "#4caf50";
+            } else {
+                pesan.textContent = "❌ JAWABAN SALAH";
+                pesan.style.background = "#ffcdd2";
+                pesan.style.color = "#c62828";
+                tombolPilih.style.background = "#f44336";
+                semuaTombol[daftarSoal[nomor].benar].style.background = "#4caf50";
+            }
+
+            tombolLanjut.style.display = "block";
+        }
+
+        // Tombol lanjut
+        tombolLanjut.onclick = () => {
+            nomor++;
+            if (nomor < daftarSoal.length) {
+                tampilSoal();
+            } else {
+                tampilHasil();
+            }
+        };
+
+        // Tampil hasil akhir
+        function tampilHasil() {
+            document.querySelector(".info").style.display = "none";
+            document.querySelector(".soal").style.display = "none";
+            kotakPilihan.style.display = "none";
+            pesan.style.display = "none";
+            tombolLanjut.style.display = "none";
+            hasilAkhir.style.display = "block";
+            skorAkhir.textContent = poin;
+
+            if (poin >= 8) pesanNilai.textContent = "🌟 Luar biasa! Penguasaan materi sangat baik.";
+            else if (poin >= 6) pesanNilai.textContent = "👍 Bagus! Tingkatkan lagi pemahamanmu.";
+            else pesanNilai.textContent = "💪 Semangat belajar lagi ya, pasti bisa lebih baik!";
+        }
+
+        // Mulai permainan
+        tampilSoal();
+    </script>
 </body>
 </html>
