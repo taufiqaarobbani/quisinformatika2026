@@ -67,6 +67,47 @@
             outline: none;
             border-color: #00796b;
         }
+
+        /* === KOTAK PENCARIAN NAMA === */
+        .kotak-pencarian {
+            position: relative;
+        }
+        #cariNama {
+            margin-bottom: 8px;
+        }
+        .daftar-nama-hasil {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 280px;
+            overflow-y: auto;
+            background: white;
+            border: 2px solid #b2dfdb;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            z-index: 100;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .saran-nama {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid #e0f2f1;
+        }
+        .saran-nama:hover {
+            background: #e0f2f1;
+        }
+        .saran-nama:last-child {
+            border-bottom: none;
+        }
+        .tidak-ada-hasil {
+            padding: 12px;
+            color: #757575;
+            font-style: italic;
+            text-align: center;
+        }
+
         .btn-mulai {
             width: 100%;
             padding: 12px;
@@ -90,7 +131,7 @@
             display: none;
         }
         .sembunyi {
-            display: none;
+            display: none !important;
         }
 
         /* === HALAMAN KUIS === */
@@ -220,14 +261,10 @@
             <h1>MASUK KUIS INFORMATIKA</h1>
             <div class="form-group">
                 <label>Nama Lengkap Siswa</label>
-                <select id="pilihNama">
-                    <option value="">-- Pilih Nama --</option>
-                    <option value="Andi">Andi</option>
-                    <option value="Ernando">Ernando</option>
-                    <option value="Mustopa">Mustopa</option>
-                    <option value="Rohman">Rohman</option>
-                    <option value="lainnya">Lainnya...</option>
-                </select>
+                <div class="kotak-pencarian">
+                    <input type="text" id="cariNama" placeholder="Ketik nama atau huruf (contoh: a)..." autocomplete="off">
+                    <div class="daftar-nama-hasil sembunyi" id="daftarSaranNama"></div>
+                </div>
             </div>
             <div class="form-group sembunyi" id="kolomNamaLain">
                 <label>Tuliskan Nama Kamu</label>
@@ -280,6 +317,141 @@
     </div>
 
     <script>
+        // === DAFTAR SEMUA NAMA SISWA ===
+        const daftarSemuaNama = [
+            "AGUNG LASMANA",
+            "AHMAD MAULANA",
+            "ANA NI'MATUL ULAA",
+            "ARYA SAPUTRA",
+            "BUNGA SAFITRI",
+            "DEA RATNA",
+            "DIMAS ADITIA",
+            "EDWARD FABIANO",
+            "FAHRANI SALSABILA KURNIAWAN",
+            "FIFIH NAILAH",
+            "FUJIYANTI ARAFAH",
+            "HALIMAH REGINA PUTRI",
+            "KEYSA AGITA PUTRI",
+            "MOH SAKU",
+            "MUCHAROPI",
+            "M. REZA",
+            "NUR AZIZAH",
+            "REFA",
+            "RENALDI SETIAWAN",
+            "SUPRIYOGI",
+            "SYIFAA KHOIRUNNISA",
+            "UMU AIMAN",
+            "VIDIYAH AYUNI",
+            "WIDIA NINGSIH",
+            "ALENI",
+            "AHMAD MAULUDDIN",
+            "AKHMAD KAELANI",
+            "ASYARA ADILLA KHANZA",
+            "BENTAR AL HUSNA",
+            "CHIKA RAMADHANI",
+            "DZAKY ALMER JAMAIL",
+            "ERIKA HAMID",
+            "FAHAT DWI SAPUTRA",
+            "FADHEA DWI VANNESA",
+            "HAFIZAH NURUL AEINI",
+            "HABIBUN NURULLAH",
+            "KHOERUL AZAM",
+            "KENANGA AFISTA",
+            "MARIO FATAN DERMAWAN",
+            "MUHAMAD DAVIN FERDIANSYAH",
+            "MUHAMMAD ARIF AMIRUDDIN",
+            "NURHALIMAH",
+            "PUTRI ANGGRAENI",
+            "REZA",
+            "RIFAT HIDAYAT",
+            "SYAHPUTRA",
+            "SELY RAHMADANI",
+            "SAMIUN",
+            "ZULFIKAR",
+            "ABDUL HAMID",
+            "AGUNG PRAMANA",
+            "ANDIKA RIZKI PUTRA",
+            "APRIYAN",
+            "ASIYA",
+            "DWI ANDIN JUANITA",
+            "EFAN APRIANSYAH",
+            "GALANG DWI PRATAMA",
+            "HENGKI",
+            "ILHAM NOOR FAMI",
+            "MEGA MUSTIKA",
+            "MOH ADILATUN",
+            "MOH FAZRI AMRULLAH",
+            "MOH. ARIF MAULANA",
+            "MOH. MAULANA",
+            "MOH. RIZAL",
+            "MOHAMAD REVALDI",
+            "MOHAMMAD FARID HUSEN",
+            "MOHAMMAD SHOPIULLAH",
+            "MUFLIKHA DWI WAHYUNI",
+            "MUHAMAD ARSYADATUL UMAM",
+            "MUHAMAD FADIL FADILLAH",
+            "MUHAMMAD NUR ZAFIN",
+            "MUHAMMAD SANDIH",
+            "NATASYA RAMADHANTI",
+            "NOVA ALFIANA",
+            "RAMADAN",
+            "RISKY MAULANA",
+            "SEKAR KEMUNING",
+            "SELVI",
+            "SHERLY KHASANAH",
+            "SITI AFNI AULIYAH",
+            "SOLEHA WIDIA WATI",
+            "SULAIMAN",
+            "SYIFATURRAHMAWATI",
+            "ADEL LITA",
+            "ALHANA",
+            "ALPIN MUBAROK",
+            "ANDI IBRAHIM BAANGGA RAHAWARIN",
+            "DIKI FIRMANSYAH",
+            "FADLI FASHA SHAPUTRA",
+            "GALIH VIJAR NUGRAHA",
+            "IJJATUL HIMAH",
+            "LIOTY ATTALA PRIYANA",
+            "MARSELA AURILIANI PUTRI",
+            "MUHAMMAD IZARRUL AZHAR",
+            "MUHAMMAD RIZQI ASHSHUBHI",
+            "NAIF DERMAWAN",
+            "NINA NATASYA",
+            "NURUL AINI",
+            "PUTRI NURITA",
+            "SAEFUL MU'MIN AL MADANI",
+            "SALMAH",
+            "SITI FITRIYAH",
+            "SUNADI",
+            "TATIH AGUSTINA",
+            "ZIDNI ILMAN",
+            "AHMAD RIYANI",
+            "ALDIANSYAH",
+            "ANGGA",
+            "ARMAN",
+            "AULIA RAHMAWATI",
+            "DAMAR ADIYASA",
+            "GIO RAHMADHAN",
+            "IMAN MAULANA",
+            "LUVI SAHRUL",
+            "MELISA",
+            "MOHAMMAD AFIF MAULANA",
+            "MOHAMMAD YASIN ARAFAT",
+            "NABILA AZZALIA PUTRI",
+            "NATASHA SAFFA AZAHRA",
+            "NILA LESTARI",
+            "NUR AZIZAH",
+            "SAFIRA DEWI",
+            "SEMI AJI DILAGA",
+            "SITI RAHMA YANI",
+            "SITI SHOLEHA",
+            "SRI HAYATI",
+            "SUCI SEPTIANI",
+            "SUTA",
+            "TIARA PUTRI FEBRIYANTI",
+            "--- LAINNYA ---"
+        ];
+
         // === 5 PAKET SOAL: A, B, C, D, E ===
         const paketSoal = {
             A: [
@@ -356,7 +528,8 @@
         const halamanLogin = document.getElementById("halamanLogin");
         const halamanKuis = document.getElementById("halamanKuis");
         const halamanHasil = document.getElementById("halamanHasil");
-        const pilihNama = document.getElementById("pilihNama");
+        const cariNama = document.getElementById("cariNama");
+        const daftarSaranNama = document.getElementById("daftarSaranNama");
         const kolomNamaLain = document.getElementById("kolomNamaLain");
         const inputNamaLain = document.getElementById("inputNamaLain");
         const inputKelas = document.getElementById("inputKelas");
@@ -379,14 +552,51 @@
         const skorAkhir = document.getElementById("skorAkhir");
         const pesanNilai = document.getElementById("pesanNilai");
 
-        // === TAMPIL/Sembunyikan KOLOM NAMA LAINNYA ===
-        pilihNama.addEventListener("change", () => {
-            if (pilihNama.value === "lainnya") {
-                kolomNamaLain.classList.remove("sembunyi");
-                inputNamaLain.focus();
-            } else {
-                kolomNamaLain.classList.add("sembunyi");
-                inputNamaLain.value = "";
+        // === FITUR PENCARIAN NAMA ===
+        cariNama.addEventListener("input", () => {
+            const kataKunci = cariNama.value.trim().toUpperCase();
+            daftarSaranNama.innerHTML = "";
+            kolomNamaLain.classList.add("sembunyi");
+
+            if (kataKunci === "") {
+                daftarSaranNama.classList.add("sembunyi");
+                return;
+            }
+
+            // Cari nama yang mengandung kata kunci
+            const hasilCari = daftarSemuaNama.filter(nama => nama.toUpperCase().includes(kataKunci));
+
+            if (hasilCari.length === 0) {
+                daftarSaranNama.innerHTML = "<div class='tidak-ada-hasil'>Nama tidak ditemukan. Silakan tulis sendiri di bawah.</div>";
+                daftarSaranNama.classList.remove("sembunyi");
+                return;
+            }
+
+            // Tampilkan saran nama
+            hasilCari.forEach(nama => {
+                const opsi = document.createElement("div");
+                opsi.className = "saran-nama";
+                opsi.textContent = nama;
+                opsi.onclick = () => {
+                    if (nama === "--- LAINNYA ---") {
+                        cariNama.value = "";
+                        kolomNamaLain.classList.remove("sembunyi");
+                        inputNamaLain.focus();
+                    } else {
+                        cariNama.value = nama;
+                    }
+                    daftarSaranNama.classList.add("sembunyi");
+                };
+                daftarSaranNama.appendChild(opsi);
+            });
+
+            daftarSaranNama.classList.remove("sembunyi");
+        });
+
+        // Sembunyikan saran saat klik di luar kotak pencarian
+        document.addEventListener("click", (e) => {
+            if (!cariNama.contains(e.target) && !daftarSaranNama.contains(e.target)) {
+                daftarSaranNama.classList.add("sembunyi");
             }
         });
 
@@ -401,18 +611,18 @@
         // === FUNGSI MULAI KUIS ===
         btnMulai.addEventListener("click", () => {
             // Ambil nama sesuai pilihan
-            if (pilihNama.value === "lainnya") {
-                namaSiswa = inputNamaLain.value.trim();
+            if (kolomNamaLain.classList.contains("sembunyi")) {
+                namaSiswa = cariNama.value.trim();
             } else {
-                namaSiswa = pilihNama.value.trim();
+                namaSiswa = inputNamaLain.value.trim();
             }
             kelasSiswa = inputKelas.value.trim();
 
             // Validasi
             if (namaSiswa === "" || kelasSiswa === "") {
-                pesanError.textContent = pilihNama.value === "lainnya" && namaSiswa === ""
-                    ? "Silakan TULIS nama lengkapmu terlebih dahulu!"
-                    : "Silakan Pilih Nama dan Kelas terlebih dahulu!";
+                pesanError.textContent = kolomNamaLain.classList.contains("sembunyi") && namaSiswa === ""
+                    ? "Silakan Ketik dan Pilih Nama terlebih dahulu!"
+                    : "Silakan Lengkapi Nama dan Kelas terlebih dahulu!";
                 pesanError.style.display = "block";
                 return;
             }
