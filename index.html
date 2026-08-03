@@ -54,14 +54,16 @@
             font-weight: bold;
             color: #004d40;
         }
-        input {
+        select, input {
             width: 100%;
             padding: 12px;
             border: 2px solid #b2dfdb;
             border-radius: 8px;
             font-size: 15px;
+            background: white;
+            cursor: pointer;
         }
-        input:focus {
+        select:focus, input:focus {
             outline: none;
             border-color: #00796b;
         }
@@ -85,6 +87,9 @@
             text-align: center;
             margin-top: 10px;
             font-weight: bold;
+            display: none;
+        }
+        .sembunyi {
             display: none;
         }
 
@@ -215,14 +220,32 @@
             <h1>MASUK KUIS INFORMATIKA</h1>
             <div class="form-group">
                 <label>Nama Lengkap Siswa</label>
-                <input type="text" id="inputNama" placeholder="Masukkan nama kamu..." autocomplete="off">
+                <select id="pilihNama">
+                    <option value="">-- Pilih Nama --</option>
+                    <option value="Andi">Andi</option>
+                    <option value="Ernando">Ernando</option>
+                    <option value="Mustopa">Mustopa</option>
+                    <option value="Rohman">Rohman</option>
+                    <option value="lainnya">Lainnya...</option>
+                </select>
+            </div>
+            <div class="form-group sembunyi" id="kolomNamaLain">
+                <label>Tuliskan Nama Kamu</label>
+                <input type="text" id="inputNamaLain" placeholder="Masukkan nama lengkapmu..." autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Kelas</label>
-                <input type="text" id="inputKelas" placeholder="Contoh: X.1 / X.2 / XI / XII.1 / XII.2 ..." autocomplete="off">
+                <select id="inputKelas">
+                    <option value="">-- Pilih Kelas --</option>
+                    <option value="X.1">X.1</option>
+                    <option value="X.2">X.2</option>
+                    <option value="XI">XI</option>
+                    <option value="XII.1">XII.1</option>
+                    <option value="XII.2">XII.2</option>
+                </select>
             </div>
             <button class="btn-mulai" id="btnMulai">MULAI KUIS</button>
-            <div class="pesan-error" id="pesanError">Lengkapi Nama dan Kelas terlebih dahulu!</div>
+            <div class="pesan-error" id="pesanError">Silakan Pilih Nama dan Kelas terlebih dahulu!</div>
         </div>
 
         <!-- HALAMAN KUIS -->
@@ -333,7 +356,9 @@
         const halamanLogin = document.getElementById("halamanLogin");
         const halamanKuis = document.getElementById("halamanKuis");
         const halamanHasil = document.getElementById("halamanHasil");
-        const inputNama = document.getElementById("inputNama");
+        const pilihNama = document.getElementById("pilihNama");
+        const kolomNamaLain = document.getElementById("kolomNamaLain");
+        const inputNamaLain = document.getElementById("inputNamaLain");
         const inputKelas = document.getElementById("inputKelas");
         const btnMulai = document.getElementById("btnMulai");
         const pesanError = document.getElementById("pesanError");
@@ -354,9 +379,20 @@
         const skorAkhir = document.getElementById("skorAkhir");
         const pesanNilai = document.getElementById("pesanNilai");
 
+        // === TAMPIL/Sembunyikan KOLOM NAMA LAINNYA ===
+        pilihNama.addEventListener("change", () => {
+            if (pilihNama.value === "lainnya") {
+                kolomNamaLain.classList.remove("sembunyi");
+                inputNamaLain.focus();
+            } else {
+                kolomNamaLain.classList.add("sembunyi");
+                inputNamaLain.value = "";
+            }
+        });
+
         // === FUNGSI PILIH PAKET SECARA ACAK ===
         function pilihPaketAcak() {
-            const daftarKunci = Object.keys(paketSoal); // ['A','B','C','D','E']
+            const daftarKunci = Object.keys(paketSoal);
             const indeksAcak = Math.floor(Math.random() * daftarKunci.length);
             namaPaketTerpilih = daftarKunci[indeksAcak];
             daftarSoalTerpilih = paketSoal[namaPaketTerpilih];
@@ -364,15 +400,23 @@
 
         // === FUNGSI MULAI KUIS ===
         btnMulai.addEventListener("click", () => {
-            namaSiswa = inputNama.value.trim();
+            // Ambil nama sesuai pilihan
+            if (pilihNama.value === "lainnya") {
+                namaSiswa = inputNamaLain.value.trim();
+            } else {
+                namaSiswa = pilihNama.value.trim();
+            }
             kelasSiswa = inputKelas.value.trim();
 
+            // Validasi
             if (namaSiswa === "" || kelasSiswa === "") {
+                pesanError.textContent = pilihNama.value === "lainnya" && namaSiswa === ""
+                    ? "Silakan TULIS nama lengkapmu terlebih dahulu!"
+                    : "Silakan Pilih Nama dan Kelas terlebih dahulu!";
                 pesanError.style.display = "block";
                 return;
             }
 
-            // PILIH PAKET SEKARANG
             pilihPaketAcak();
 
             pesanError.style.display = "none";
