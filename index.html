@@ -656,7 +656,7 @@
             });
         }
 
-        // === CEK JAWABAN ===
+        // === CEK JAWABAN (SUDAH DIUBAH) ===
         function cekJawaban(pilihanUser, tombolPilih) {
             const semuaTombol = document.querySelectorAll(".tombol");
             semuaTombol.forEach(b => b.disabled = true);
@@ -668,13 +668,13 @@
                 pesan.textContent = "✅ JAWABAN BENAR! Poin bertambah 1";
                 pesan.style.background = "#c8e6c9";
                 pesan.style.color = "#2e7d32";
-                tombolPilih.style.background = "#4caf50";
+                tombolPilih.style.background = "#4caf50"; // Pilihan siswa jadi hijau
             } else {
                 pesan.textContent = "❌ JAWABAN SALAH";
                 pesan.style.background = "#ffcdd2";
                 pesan.style.color = "#c62828";
-                tombolPilih.style.background = "#f44336";
-                semuaTombol[daftarSoalTerpilih[nomor].benar].style.background = "#4caf50";
+                tombolPilih.style.background = "#f44336"; // Pilihan siswa jadi merah
+                // Baris kode yang memberi warna hijau pada jawaban benar dihapus
             }
 
             tombolLanjut.style.display = "block";
